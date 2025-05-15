@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Tracce MP3 RSS</title>
+</head>
+<body>
+  <h1>Tracce MP3</h1>
+  <ul id="lista"></ul>
+
+  <script>
+    const rss = 'url_rss';
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', rss);
+    xhr.onload = function() 
+    {
+      if (xhr.status === 200) {
+        const xml = new DOMParser().parseFromString(xhr.responseText, 'text/xml');
+        xml.querySelectorAll('item').forEach(i => {
+          const t = i.querySelector('title').textContent;
+          const u = i.querySelector('enclosure')?.getAttribute('url');
+          if (u) 
+          {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="${u}" target="_blank">${t}</a>`;
+            document.getElementById('lista').append(li);
+          }
+        });
+      }
+    };
+    xhr.send();
+  </script>
+</body>
+</html>
